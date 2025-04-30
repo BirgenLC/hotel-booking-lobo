@@ -3,18 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch inndex.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "express-session": "^1.18.1",
-    "my": "^0.3.3",
-    "sql": "^0.78.0"
+    "mysql": "^2.18.1"
   }
 }
