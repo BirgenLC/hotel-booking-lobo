@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/public/styles/main.css" />
+<header>
+  <a href="/">Lobo system</a>
+  <nav>
+    <% if(locals.user){%>
+    <a href="/checkin">Checkin Client</a>
+    <a href="/checkout">Checkout Client</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/clients">Clients</a>
+    <a href="/logout">Logout</a>
+    <%}else{%>
+    <a href="/about">About</a>
+    <a href="/book">Book now</a>
+    <a href="/checkin">Checkin </a>
+    <a href="/checkout">Checkout</a>
+    <a href="/login">Login</a>
+    <%}%>
+  </nav>
+</header>

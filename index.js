@@ -26,18 +26,21 @@ app.use(
 );
 //authorization middleware
 
-const superAdminRoutes = ["/newSpot", "/newRoom", "/checkout"];
-const receptionRoutes = ["/checkout", "/checkin", "/roomUpdates"];
+const superAdminRoutes = ["/newSpot", "/newRoom"];
+const receptionistRoutes = ["/roomUpdates"];
+const managerRoutes = ["/addReceptionist", "roomUpdates"];
 
 //all other routes are public
 app.use((req, res, next) => {
   if (req.session.user) {
+    res.locals.user = req.session.user; //send user data to views/ejs
+    //user is logged in
     const userRole = req.session.user.role;
     if (userRole === "superadmin" && superAdminRoutes.includes(req.path)) {
       next();
     } else if (
       userRole === "reception" &&
-      receptionisRoutes.includes(req.path)
+      receptionistRoutes.includes(req.path)
     ) {
       next();
     } else if (userRole === "manager" && managerRoutes.includes(req.path)) {
@@ -45,7 +48,7 @@ app.use((req, res, next) => {
     } else {
       if (
         superAdminRoutes.includes(req.path) ||
-        receptionisRoutes.includes(req.path)
+        receptionistRoutes.includes(req.path)
       ) {
         res.status(401).send("Unauthorized - 401");
       } else {
@@ -72,9 +75,33 @@ app.get("/", (req, res) => {
     }
   });
 });
+// PUBLIC ROUTES
+app.get("/", (req, res) => {});
 
+app.get("/newRoom", (req, res) => {
+  res.render("newRoom.ejs");
+});
 app.get("/login", (req, res) => {
   res.render("login.ejs");
+});
+
+app.get("/checkout", (req, res) => {
+  res.render("checkout.ejs");
+});
+
+app.get("/checkin", (req, res) => {
+  res.render("checkin.ejs");
+});
+
+app.get("/about", (req, res) => {
+  res.render("about.ejs");
+});
+
+app.get("/book", (req, res) => {
+  res.render("book.ejs");
+});
+app.get("/bookings", (req, res) => {
+  res.render("bookings.ejs");
 });
 
 app.get("/newSpot", (req, res) => {
@@ -83,10 +110,6 @@ app.get("/newSpot", (req, res) => {
 
 app.get("/newRoom", (req, res) => {
   res.render("newRoom.ejs");
-});
-
-app.get("/checkout", (req, res) => {
-  res.render("checkout.ejs");
 });
 
 app.get("/addReceptionist", (req, res) => {
@@ -104,7 +127,7 @@ app.post("/login", (req, res) => {
         if (userData.length == 0) {
           res.status(401).send("User not found");
           const user = userData[0];
-          const isPasswordValid = bycrypt.compareSync(password, user.password);
+          const isPasswordValid = bcrypt.compareSync(password, user.password);
           if (isPasswordValid) {
             res.send("Login successful");
           } else {
@@ -117,7 +140,7 @@ app.post("/login", (req, res) => {
   );
 });
 
-console.log(bycrpt.hashSync("admin508", 2)); //hash password for testing
+//console.log(bcrypt.hashSync("admin508", 2)); //hash password for testing
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
