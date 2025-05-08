@@ -8,7 +8,13 @@
   </head>
   <body>
     <%- include("_header.ejs")%>
-    <h1>Lobo Hotel Booking</h1>
+
+    <section class="hero">
+      <div class="backdrop"></div>
+      <h1>Welcome to Lobo Hotel</h1>
+      <p>Experience luxury and comfort like never before.</p>
+      <a href="/#room" class="cta">Book Now</a>
+    </section>
 
     <section>
       <h2>Our rooms</h2>
@@ -34,7 +40,7 @@
           <p>
             Capacity: <%=spot.capacity_range%> || Price per day:<%=spot.price%>
           </p>
-          <a href="/book?id=<%= spot.spot_id%>">Book Now</a>
+          <a href="/book?id=<%= spot.spot_id%>&type=spot">Book Now</a>
         </div>
         <% })%>
       </div>

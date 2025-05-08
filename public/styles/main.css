@@ -33,10 +33,11 @@ a {
 }
 .hero {
   min-height: 50vh;
-  background-image: url("../images/hero.jpg");
+  background-image: url("/images/lobo.jpg");
   background-size: cover;
   background-position: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: white;

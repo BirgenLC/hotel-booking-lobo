@@ -7,7 +7,60 @@
   </head>
   <body>
     <%- include("_header.ejs")%>
-    <h1>BOOK WITH US</h1>
-    <!--ALLOW ANY USER TO BOOK A SPOT OR ROOM-->
+    <section class="info">
+      <h1>Book Room or Spot</h1>
+      <h2>Your booking this <%locals.room? "Room" :"Spot"%></h2>
+      <!--ALLOW ANY USER TO BOOK A SPOT OR ROOM-->
+      <div class="booking-details">
+        <img src="<%= locals.image%>" alt="<%=locals.type%>" />
+        <h3>Room/Spot Type: <%= locals.type%></h3>
+        <h3>Room/Spot ID: <%= locals.id%></h3>
+        <h3>Price per Night/Day:KSH <%= locals.price%></h3>
+        <h3>Capacity: <%= locals.capacity ? locals.capacity: "NA"%></h3>
+        <h3>Booking Date: <%= locals.date%></h3>
+      </div>
+    </section>
+    <section class="client-info">
+      <h2>Client Information</h2>
+      <p>Please fill in your details to proceed with booking</p>
+      <form action="/book" method="post" id="client-info-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required />
+
+        <button type="submit">Submit Info</button>
+      </form>
+    </section>
+
+    <script>
+      const clientInfoForm = document.getElementById("client-info-form");
+
+      clientInfoForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        fetch("http");
+      });
+    </script>
+
+    <section class="booking-info">
+      <h2>Booking Information</h2>
+      <p>Please fill in your booking details</p>
+      <form action="/confirmBooking" method="post">
+        <label for="checkin">Check-in Date:</label>
+        <input type="date" id="checkin" name="checkin" required />
+
+        <label for="checkout">Number of Nights :(optional)</label>
+        <input type="number" id="nights" name="nights" required />
+
+        <button type="submit">Confirm Booking:`</button>
+      </form>
+    </section>
   </body>
 </html>
