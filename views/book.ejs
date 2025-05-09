@@ -3,27 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Book</title>
   </head>
   <body>
-    <%- include("_header.ejs")%>
+    <%- include("_header.ejs") %>
     <section class="info">
       <h1>Book Room or Spot</h1>
-      <h2>Your booking this <%locals.room? "Room" :"Spot"%></h2>
-      <!--ALLOW ANY USER TO BOOK A SPOT OR ROOM-->
+      <h2>You are booking this <%= locals.room? "Room" : "Spot" %></h2>
+
       <div class="booking-details">
-        <img src="<%= locals.image%>" alt="<%=locals.type%>" />
-        <h3>Room/Spot Type: <%= locals.type%></h3>
-        <h3>Room/Spot ID: <%= locals.id%></h3>
-        <h3>Price per Night/Day:KSH <%= locals.price%></h3>
-        <h3>Capacity: <%= locals.capacity ? locals.capacity: "NA"%></h3>
-        <h3>Booking Date: <%= locals.date%></h3>
+        <img src="<%=locals.image%>" alt="<%= locals.type %>" width="300px" />
+        <h3>Room/Spot Type: <%= locals.type %></h3>
+        <h3>Room/Spot ID: <%= locals.id %></h3>
+        <h3>Price per Night/Day: KSH. <%= locals.price %></h3>
+        <h3>Capacity: <%= locals.capacity ? locals.capacity : "NA" %></h3>
       </div>
     </section>
     <section class="client-info">
       <h2>Client Information</h2>
-      <p>Please fill in your details to proceed with booking</p>
-      <form action="/book" method="post" id="client-info-form">
+      <p>Please fill in your details to proceed with the booking.</p>
+      <form action="/client-info" method="POST" id="client-info-form">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required />
 
@@ -36,31 +35,78 @@
         <button type="submit">Submit Info</button>
       </form>
     </section>
-
     <script>
       const clientInfoForm = document.getElementById("client-info-form");
 
       clientInfoForm.addEventListener("submit", (e) => {
-        e.preventDefault();
+        e.preventDefault(); // browser default action of form submission
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
         const phone = document.getElementById("phone").value;
-        fetch("http");
+        fetch("http://127.0.0.1:3000/client-info", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              document.getElementById("client-info-form").style.display =
+                "none";
+              const message = document.createElement("p");
+              message.style.color = "green";
+              message.innerHTML =
+                "Your information was submitted successfull! <br>Now you can proceed to book your room/spot";
+              document.querySelector(".client-info").appendChild(message);
+              document.getElementById("client").value = data.clientID; //Assuming the server returns clientID
+            } else {
+              alert("Error submitting form. Please try again.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       });
     </script>
 
     <section class="booking-info">
       <h2>Booking Information</h2>
-      <p>Please fill in your booking details</p>
-      <form action="/confirmBooking" method="post">
+      <p>Please fill in your booking details.</p>
+      <form action="/completeBooking" method="POST">
+        <input type="hidden" name="type" id="type" value=" <%= locals.room?
+        "room":"spot"%>"/>
+        <input type="hidden" name="id" id="id" value="<%= locals.id %>" />
+        <input type="hidden" name="client" id="client" value="" />
         <label for="checkin">Check-in Date:</label>
         <input type="date" id="checkin" name="checkin" required />
 
-        <label for="checkout">Number of Nights :(optional)</label>
-        <input type="number" id="nights" name="nights" required />
+        <label for="night">Number of nights/guests</label>
+        <input type="number" id="number" name="number" />
 
-        <button type="submit">Confirm Booking:`</button>
+        <button type="submit">Complete Booking</button>
       </form>
     </section>
+    <script>
+      //complete booking only if client info is submitteds
+      const bookingForm = document.querySelector("#complete-booking-form");
+      bookingForm.addEventListener("submit", (e) => {
+        const clientID = document.getElementById("client").value;
+        if (!clientID) {
+          e.preventDefault();
+          alert(
+            "Please submit your client information first before proceeding"
+          );
+        }
+      });
+    </script>
+
+    <!-- allow any user to book a spot or a room -->
+    <!-- date/days , identify capacity  --- input type hidden --- csrf, cors -->
   </body>
 </html>
